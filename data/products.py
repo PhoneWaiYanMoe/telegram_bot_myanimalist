@@ -20,9 +20,8 @@ FLOWERS = [
     "ကျူးလစ် (Tulip)"
 ]
 
-HANDKERCHIEF_PRICE = 10000 
+HANDKERCHIEF_PRICE = 8000 
 
-# Handkerchief images (replace with your actual image URLs or file_ids)
 HANDKERCHIEF_IMAGES = [
     "AgACAgUAAxkDAAMCaXBRmlInv843wOGca7jiF83EIKgAAhMPaxt0j4BXH4LSrNt7WVUBAAMCAAN5AAM4BA",
     "AgACAgUAAxkDAAMDaXBRnp-fz--VNbU241MvsleCnhoAAhQPaxt0j4BXYbltbC0nnlkBAAMCAAN5AAM4BA",

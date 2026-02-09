@@ -22,6 +22,16 @@ async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif 'address' not in session['user_info']:
             await handkerchief_handler.collect_address(update, context)
 
+async def keep_alive(context: ContextTypes.DEFAULT_TYPE):
+    """Send silent keep-alive message to prevent scale-to-zero"""
+    try:
+        await context.bot.send_message(
+            chat_id=config.OWNER_TELEGRAM_ID,
+            text=".",
+            disable_notification=True
+        )
+    except Exception:
+        pass  # Fail silently
 def main():
     """Start the bot"""
     application = Application.builder().token(config.BOT_TOKEN).build()
@@ -50,7 +60,12 @@ def main():
         filters.TEXT & ~filters.COMMAND,
         handle_text_input
     ))
-    
+    application.job_queue.run_repeating(
+        keep_alive, 
+        interval=1800,   # 30 minutes
+        first=60         # start after 1 minute
+    )
+
     print("🤖 Myanimalist Bot is running...")
     application.run_polling()
 
