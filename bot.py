@@ -4,6 +4,7 @@ import handlers.start as start_handler
 import handlers.handkerchief as handkerchief_handler
 import config
 from database.models import UserSession
+import asyncio
 
 async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle all text inputs based on user's current stage"""
@@ -34,6 +35,15 @@ async def keep_alive(context: ContextTypes.DEFAULT_TYPE):
         pass  # Fail silently
 def main():
     """Start the bot"""
+    # For Python 3.14+ compatibility, explicitly create and set the event loop
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            raise RuntimeError("Event loop is closed")
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+    
     application = Application.builder().token(config.BOT_TOKEN).job_queue(JobQueue()).build()
     
     # Start command
