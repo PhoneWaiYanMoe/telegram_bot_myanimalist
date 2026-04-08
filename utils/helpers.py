@@ -1,4 +1,3 @@
-# ==================== utils/helpers.py ====================
 import config
 from datetime import datetime
 

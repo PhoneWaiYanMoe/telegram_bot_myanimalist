@@ -1,5 +1,5 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes, JobQueue
 import handlers.start as start_handler
 import handlers.handkerchief as handkerchief_handler
 import config
@@ -34,7 +34,7 @@ async def keep_alive(context: ContextTypes.DEFAULT_TYPE):
         pass  # Fail silently
 def main():
     """Start the bot"""
-    application = Application.builder().token(config.BOT_TOKEN).build()
+    application = Application.builder().token(config.BOT_TOKEN).job_queue(JobQueue()).build()
     
     # Start command
     application.add_handler(CommandHandler("start", start_handler.start))
