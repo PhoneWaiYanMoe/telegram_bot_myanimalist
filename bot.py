@@ -33,17 +33,19 @@ async def keep_alive(context: ContextTypes.DEFAULT_TYPE):
         )
     except Exception:
         pass  # Fail silently
+
+async def run_webhook(application):
+    """Run the bot with webhooks"""
+    await application.bot.set_webhook(url=config.WEBHOOK_URL)
+    port = int(os.environ.get("PORT", 5000))
+    await application.run_webhook(
+        listen="0.0.0.0",
+        port=port,
+        webhook_url=config.WEBHOOK_URL
+    )
+
 def main():
     """Start the bot"""
-    # For Python 3.14+ compatibility, explicitly create and set the event loop
-    try:
-        loop = asyncio.get_event_loop()
-        if loop.is_closed():
-            raise RuntimeError("Event loop is closed")
-    except RuntimeError:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-    
     application = Application.builder().token(config.BOT_TOKEN).job_queue(JobQueue()).build()
     
     # Start command
@@ -77,7 +79,13 @@ def main():
     )
 
     print("🤖 Myanimalist Bot is running...")
-    application.run_polling()
+    
+    if config.USE_WEBHOOKS:
+        if not config.WEBHOOK_URL:
+            raise ValueError("WEBHOOK_URL not set for webhook mode")
+        asyncio.run(run_webhook(application))
+    else:
+        application.run_polling()
 
 if __name__ == '__main__':
     main()
