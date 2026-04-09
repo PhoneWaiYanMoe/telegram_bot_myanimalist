@@ -84,7 +84,21 @@ def main():
     if config.USE_WEBHOOKS:
         if not config.WEBHOOK_URL:
             raise ValueError("WEBHOOK_URL not set for webhook mode")
-        asyncio.run(run_webhook(application))
+        # Handle event loop for Python 3.14 compatibility
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        task = loop.create_task(run_webhook(application))
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            task.cancel()
+            try:
+                loop.run_until_complete(task)
+            except asyncio.CancelledError:
+                pass
+            loop.close()
     else:
         # For Python 3.14+ compatibility in polling mode
         try:
