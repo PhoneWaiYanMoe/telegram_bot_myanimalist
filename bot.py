@@ -5,6 +5,7 @@ import handlers.handkerchief as handkerchief_handler
 import config
 from database.models import UserSession
 import asyncio
+import os
 
 async def handle_text_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle all text inputs based on user's current stage"""
