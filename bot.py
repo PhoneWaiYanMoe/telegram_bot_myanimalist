@@ -85,6 +85,12 @@ def main():
             raise ValueError("WEBHOOK_URL not set for webhook mode")
         asyncio.run(run_webhook(application))
     else:
+        # For Python 3.14+ compatibility in polling mode
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
         application.run_polling()
 
 if __name__ == '__main__':
